@@ -23,14 +23,27 @@
 
 </head>
 
-<body data-ng-app="app">
+<body>
 
-<div>
+    <div class="container">
 
-</div>
+        <data-ng-view></data-ng-view>
+
+    </div> <!-- /container -->
 
     <!-- inject:js -->
     <!-- endinject -->
+
+    <script>
+        (function () {
+            window.onGoogleApiLoad = function () {
+                angular.element(document).ready(function () {
+                    angular.bootstrap(document, ['app']);
+                });
+            }
+        })();
+    </script>
+    <script src="https://apis.google.com/js/api:client.js?onload=onGoogleApiLoad"></script>
 
 </body>
 

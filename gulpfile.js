@@ -20,7 +20,7 @@ var print = require('gulp-print');
 var paths = {
     scripts: 'src/**/*.js',
     css: "src/css",
-    views: "src/views",
+    views: "src/**/*.html",
     images: "src/img",
     srcIndex: "src/index.html",
     devDist: "dist",
@@ -94,32 +94,32 @@ pipes.validatedAppScripts = function () {
         .pipe(plugins.jshint());
 };
 
-pipes.spotifyPartials = function () {
-    return gulp.src(['app/**/*.html', '!app/index.html'])
+pipes.partials = function () {
+    return gulp.src(['src/**/*.html', '!src/index.html'])
         .pipe(plugins.htmlhint({ 'doctype-first': false }));
 };
 
-pipes.scriptedSpotifyPartials = function () {
-    return pipes.spotifyPartials()
+pipes.scriptedPartials = function () {
+    return pipes.partials()
         .pipe(plugins.htmlhint.failReporter())
         .pipe(plugins.htmlmin({ collapseWhitespace: true, removeComments: true }))
         .pipe(plugins.ngHtml2js({
-            moduleName: "app.spotify"
+            moduleName: "app.application"
         }));
 };
 
 pipes.builtAppScriptsDev = function () {
-    var scriptedSpotifyPartials = pipes.scriptedSpotifyPartials();
+    var scriptedPartials = pipes.scriptedPartials();
     var validatedAppScripts = pipes.validatedAppScripts();
-    return es.merge(series(scriptedSpotifyPartials, validatedAppScripts))
+    return es.merge(series(scriptedPartials, validatedAppScripts))
         .pipe(gulp.dest(paths.devDist));
 };
 
 pipes.builtAppScriptsProd = function () {
-    var scriptedSpotifyPartials = pipes.scriptedSpotifyPartials();
+    var scriptedPartials = pipes.scriptedPartials();
     var validatedAppScripts = pipes.validatedAppScripts();
 
-    return es.merge(series(scriptedSpotifyPartials, validatedAppScripts))
+    return es.merge(series(scriptedPartials, validatedAppScripts))
         .pipe(pipes.orderedAppScripts())
         .pipe(plugins.concat('app.min.js'))
         .pipe(plugins.uglify())
