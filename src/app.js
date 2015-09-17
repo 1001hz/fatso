@@ -47,16 +47,25 @@
 
     angular
         .module("app")
-        .run(function ($rootScope, $location, AUTH_EVENTS, SessionSrv) {
+        .run(function ($rootScope, $location, AUTH_EVENTS, AuthSrv, AwsSrv) {
             // redirect on login
             $rootScope.$on(AUTH_EVENTS.logInSuccess, function (event, data) {
-                SessionSrv.setUser(data.user);
-                $location.path('/application');
+                // set up AWS DB connection
+                AwsSrv.setToken(data.user.details.idToken);
+
+                AuthSrv.setUser(data.user)
+                    .then(function(){
+                        $location.path('/application');
+                    })
+                    .catch(function(error){
+                        alert(error);
+                    });
+
             });
 
             // redirect on log out
             $rootScope.$on(AUTH_EVENTS.logOutSuccess, function (event, data) {
-                SessionSrv.setUser(data.user);
+                AuthSrv.resetUser();
                 $location.path('/login');
             });
 
@@ -64,7 +73,7 @@
             $rootScope.$on('$routeChangeStart', function (event, next, current) {
                 // if route requires auth and user is not logged in
                 var accessLevel = next.data.accessLevel;
-                if (accessLevel=='private' && !SessionSrv.isLoggedIn()) {
+                if (accessLevel=='private' && !AuthSrv.isLoggedIn()) {
                     // redirect back to login
                     event.preventDefault();
                     $location.path('/login');

@@ -6,9 +6,9 @@
         .module("app.application")
         .directive("navbar", navbar);
 
-    navbar.$inject = ["SessionSrv"];
+    navbar.$inject = ["AuthSrv"];
 
-    function navbar(SessionSrv){
+    function navbar(AuthSrv){
         return{
             templateUrl: 'modules/application/components/navbar/navbarView.html',
             replace: true,
@@ -17,9 +17,12 @@
         }
 
         function linkFn(scope, elem, attrs){
-            SessionSrv.getUser()
+            AuthSrv.getUser()
                 .then(function(user){
-                    scope.username = user.name;
+                    scope.username = user.details.name;
+                })
+                .catch(function(){
+                    scope.username = "User account";
                 });
 
         }

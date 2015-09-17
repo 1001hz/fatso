@@ -6,9 +6,9 @@
         .module('app.google')
         .directive('googleSignin', googleSignin);
 
-    googleSignin.$inject = ['GoogleSrv', '$rootScope', 'AUTH_EVENTS'];
+    googleSignin.$inject = ['GoogleSrv', '$rootScope', 'AUTH_EVENTS', 'User'];
 
-    function googleSignin(GoogleSrv, $rootScope, AUTH_EVENTS) {
+    function googleSignin(GoogleSrv, $rootScope, AUTH_EVENTS, User) {
         return {
             restrict: 'A',
             link: link
@@ -61,7 +61,8 @@
             }
 
             function setUser(googleUser) {
-                scope.loading = true;
+                var user = User.createFromGoogleData(googleUser);
+                /*
                 var profile = googleUser.getBasicProfile();
                 var user = {
                     id: profile.getId(),
@@ -70,7 +71,7 @@
                     email: profile.getEmail(),
                     idToken: googleUser.getAuthResponse().id_token
                 }
-
+*/
                 $rootScope.$broadcast(AUTH_EVENTS.logInSuccess, {user: user});
             }
 
