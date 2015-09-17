@@ -23,18 +23,24 @@
         .config(['$routeProvider',
             function ($routeProvider) {
                 $routeProvider.
-                    when('/', {
+                    when('/login', {
                         templateUrl: 'modules/application/routes/login/login.html',
                         controller: 'LoginCtrl',
-                        controllerAs: 'login'
+                        controllerAs: 'login',
+                        data: {
+                            accessLevel: 'public'
+                        }
                     }).
                     when('/application', {
                         templateUrl: 'modules/application/routes/index/index.html',
                         controller: 'IndexCtrl',
-                        controllerAs: 'index'
+                        controllerAs: 'index',
+                        data: {
+                            accessLevel: 'private'
+                        }
                     }).
                     otherwise({
-                        redirectTo: '/'
+                        redirectTo: '/login'
                     });
             }
         ]);
@@ -42,10 +48,29 @@
     angular
         .module("app")
         .run(function ($rootScope, $location, AUTH_EVENTS, SessionSrv) {
+            // redirect on login
             $rootScope.$on(AUTH_EVENTS.logInSuccess, function (event, data) {
                 SessionSrv.setUser(data.user);
                 $location.path('/application');
             });
+
+            // redirect on log out
+            $rootScope.$on(AUTH_EVENTS.logOutSuccess, function (event, data) {
+                SessionSrv.setUser(data.user);
+                $location.path('/login');
+            });
+
+            // protect logged in routes
+            $rootScope.$on('$routeChangeStart', function (event, next, current) {
+                // if route requires auth and user is not logged in
+                var accessLevel = next.data.accessLevel;
+                if (accessLevel=='private' && !SessionSrv.isLoggedIn()) {
+                    // redirect back to login
+                    event.preventDefault();
+                    $location.path('/login');
+                }
+            });
+
         });
 
 })();

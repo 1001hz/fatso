@@ -16,6 +16,7 @@
         var service = {
             setUser: setUser,
             getUser: getUser,
+            isLoggedIn: isLoggedIn,
             user: null
         }
 
@@ -27,14 +28,17 @@
         }
 
         function getUser(){
-            if(service.user == null){
-                return userPromise;
-            }
-            else{
+            if(service.user !== null){
                 userDefer.resolve(service.user);
-                return userPromise;
             }
+            return userPromise;
+        }
 
+        function isLoggedIn(){
+            if(service.user == null){
+                return false;
+            }
+            return true;
         }
 
     }
