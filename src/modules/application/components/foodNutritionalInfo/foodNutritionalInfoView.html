@@ -1,0 +1,16 @@
+<table class="table table-striped" data-ng-if="foodManagerCtrl.nutrientInfo !== null">
+    <thead>
+    <tr>
+        <th>Nutrient</th>
+        <th>Amt</th>
+        <th>RDI</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="nutrient in foodManagerCtrl.nutrientInfo">
+            <td>{{nutrient.nutrient}}</td>
+            <td>{{nutrient.value}}{{nutrient.unit}}</td>
+            <td>{{nutrient.rda}}{{nutrient.unit}}</td>
+        </tr>
+    </tbody>
+</table>

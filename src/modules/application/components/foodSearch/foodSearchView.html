@@ -1,0 +1,9 @@
+<div class="box">
+    <div class="container-4" data-ng-show="foodManagerCtrl.selectedResult == null">
+        <input type="search" id="search" placeholder="Search..." data-ng-model="query" />
+        <button class="icon" data-ng-click="search()"><i class="fa fa-search"></i></button>
+    </div>
+    <div data-ng-show="foodManagerCtrl.selectedResult.name" data-ng-click="searchAgain()">
+        {{foodManagerCtrl.selectedResult.name}}
+    </div>
+</div>

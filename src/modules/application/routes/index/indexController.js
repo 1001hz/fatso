@@ -11,6 +11,8 @@
     function IndexCtrl(AuthSrv){
         var vm = this;
 
+        vm.selectedItem = "test";
+
         vm.save = function(){
 
             AuthSrv.getUser()

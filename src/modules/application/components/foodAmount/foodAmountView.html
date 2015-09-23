@@ -1,0 +1,12 @@
+<div data-ng-show="foodManagerCtrl.selectedResult !== null">
+    <input type="text" class="form-control" aria-label="Weight" data-ng-model="weight">
+
+    <select class="form-control" data-ng-model="unit">
+        <option value="grams">grams</option>
+        <option value="kilograms">kilograms</option>
+        <option value="lb">lb</option>
+        <option value="oz">oz</option>
+    </select>
+
+    <button class="btn btn-default" data-ng-click="getNutritionalInfo()">Get info</button>
+</div>

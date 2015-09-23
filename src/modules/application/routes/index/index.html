@@ -1,3 +1,12 @@
 <navbar></navbar>
-<h1>Fatso app</h1>
-<input type="text" data-food-search />
+
+<food-manager>
+    <food-search></food-search>
+    <food-results></food-results>
+    <food-amount></food-amount>
+    <food-nutritional-info></food-nutritional-info>
+    <div data-ng-repeat="nutrient in foodManagerCtrl.nutrientInfo">
+        <nutrient-bar-graph nutrient="nutrient"></nutrient-bar-graph>
+    </div>
+
+</food-manager>
