@@ -11,7 +11,11 @@
     function IndexCtrl(AuthSrv){
         var vm = this;
 
-        vm.selectedItem = "test";
+        vm.food = null;
+
+        vm.getNutritionalInfo = function(){
+            vm.food.calcNutrientsForWeight(vm.weight, vm.unit);
+        }
 
         vm.save = function(){
 

@@ -1,12 +1,58 @@
 <navbar></navbar>
 
-<food-manager>
-    <food-search></food-search>
-    <food-results></food-results>
-    <food-amount></food-amount>
-    <food-nutritional-info></food-nutritional-info>
-    <div data-ng-repeat="nutrient in foodManagerCtrl.nutrientInfo">
-        <nutrient-bar-graph nutrient="nutrient"></nutrient-bar-graph>
-    </div>
+<food-search food-profile="index.food"></food-search>
 
-</food-manager>
+
+<div class="row" data-ng-show="index.food !== null">
+    <div class="col-xs-6">
+        <div class="input-group input-group-lg">
+            <input type="text" class="form-control" placeholder="amount" aria-label="Weight" data-ng-model="index.weight">
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="input-group input-group-lg">
+            <select class="form-control weight-option" data-ng-model="index.unit">
+                <option value="grams" ng-selected="true">grams</option>
+                <option value="kilograms">kilograms</option>
+                <option value="lb">lb</option>
+                <option value="oz">oz</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row"  data-ng-show="index.food !== null">
+    <div class="col-xs-6">
+        <button class="btn btn-default btn-lg btn-full-width" data-ng-disabled="!index.weight" data-ng-click="index.getNutritionalInfo()">Find out info</button>
+    </div>
+    <div class="col-xs-6">
+        <button class="btn btn-default btn-lg btn-full-width" data-ng-disabled="!index.weight" data-ng-click="index.save()">I'm eating this</button>
+    </div>
+</div>
+
+
+<div class="row" data-ng-if="index.food.weight != null">
+    <div class="col-xs-12">
+        <h2>Nutritional Info</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nutrient</th>
+                <th>Amt</th>
+                <th>RDI</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="nutrient in index.food.nutrients">
+                <td>{{nutrient.nutrient}}</td>
+                <td>{{nutrient.nutritionalValueForWeight.value}}{{nutrient.unit}}</td>
+                <td>{{nutrient.nutritionalValueForWeight.rda}}{{nutrient.unit}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div data-ng-repeat="nutrient in index.food.nutrients" data-ng-if="index.food.weight != null">
+    <nutrient-bar-graph nutrient="nutrient"></nutrient-bar-graph>
+</div>

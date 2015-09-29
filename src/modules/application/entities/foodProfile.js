@@ -14,11 +14,13 @@
             this.nutrients = nutrients;
             this.name = name;
             this.ndbno = ndbno;
+            this.weight = null;
         }
 
         FoodProfile.createFromApiData = function (data) {
             var nutrients = {};
             angular.forEach(data.nutrients, function(nutrient){
+                nutrient.nutritionalValueForWeight = null;
                 switch (nutrient.nutrient_id) {
                     case '203':
                         nutrients.protein = nutrient;
@@ -64,8 +66,8 @@
             );
         };
 
-        FoodProfile.prototype.getNutrientsForWeight = function(weight, unit){
-
+        FoodProfile.prototype.calcNutrientsForWeight = function(weight, unit){
+            this.weight = weight;
             if(unit == 'kilograms'){
                 weight = weight * 1000;
             }
@@ -75,20 +77,18 @@
             if(unit == 'oz'){
                 weight = weight * 28.349;
             }
-            var nutrientsForWeight = [];
+
             angular.forEach(this.nutrients, function(nutrient){
+                var value = 0;
                 if(!isNaN(nutrient.gm)) {
-                    var value = (nutrient.gm / 100) * weight;
-                    nutrientsForWeight.push(
-                        {
-                            nutrient: nutrient.nutrient,
-                            unit: nutrient.unit,
-                            value: Math.round(value * 100) / 100,
-                            rda: RdaSrv.men[nutrient.nutrient_id]
-                        });
+                    value = (nutrient.gm / 100) * weight;
+                }
+                nutrient.nutritionalValueForWeight = {
+                    rda : RdaSrv.men[nutrient.nutrient_id],
+                    value : Math.round(value * 100) / 100,
+                    weight : weight
                 }
             });
-            return nutrientsForWeight;
         }
 
         return (FoodProfile);

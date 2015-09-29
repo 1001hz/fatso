@@ -1,9 +1,18 @@
-<div class="box">
-    <div class="container-4" data-ng-show="foodManagerCtrl.selectedResult == null">
-        <input type="search" id="search" placeholder="Search..." data-ng-model="query" />
-        <button class="icon" data-ng-click="search()"><i class="fa fa-search"></i></button>
-    </div>
-    <div data-ng-show="foodManagerCtrl.selectedResult.name" data-ng-click="searchAgain()">
-        {{foodManagerCtrl.selectedResult.name}}
-    </div>
+
+<div class="input-group input-group-lg" data-ng-show="selectedResult == null">
+        <input type="text" class="form-control" ng-keyup="$event.keyCode == 13 && search()" id="search" placeholder="Search..." data-ng-model="query" />
+        <span class="input-group-btn">
+            <button class="btn btn-default" data-ng-click="search()" type="button">Go!</button>
+        </span>
 </div>
+
+<div class="selected-query-item" data-ng-show="selectedResult.name" data-ng-click="searchAgain()">
+    {{selectedResult.name}}
+</div>
+
+<div>
+    <ul class="list-group">
+        <li class="list-group-item" data-ng-repeat="result in searchResults" data-ng-click="selectResult(result)">{{result.name}}</li>
+    </ul>
+</div>
+
